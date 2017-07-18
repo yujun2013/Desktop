@@ -34,7 +34,7 @@ function createWindow () {
   })
 
   // and load the index.html of the app.
-  win.loadURL(`file://${__dirname}/download.html`)
+  win.loadURL(`file://${__dirname}/index.html`)
 
   // Open the DevTools.
   win.webContents.openDevTools()

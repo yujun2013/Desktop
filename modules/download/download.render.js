@@ -17,7 +17,7 @@ module.exports = {
     cancelDownload: cancelDownload
 }
 
-RongDesktop.ipcRenderer.on('download', (event, params) => {
+ipcRenderer.on('download', (event, params) => {
     console.log('download callback');
     window.RongDesktop.downloadCallback(params);
 });
