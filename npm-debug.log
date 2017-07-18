@@ -1,0 +1,47 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files\\nodejs\\node.exe',
+1 verbose cli   'C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'run',
+1 verbose cli   'package:win' ]
+2 info using npm@3.3.12
+3 info using node@v5.3.0
+4 verbose run-script [ 'prepackage:win', 'package:win', 'postpackage:win' ]
+5 info lifecycle DemoApp@0.1.0~prepackage:win: DemoApp@0.1.0
+6 silly lifecycle DemoApp@0.1.0~prepackage:win: no script for prepackage:win, continuing
+7 info lifecycle DemoApp@0.1.0~package:win: DemoApp@0.1.0
+8 verbose lifecycle DemoApp@0.1.0~package:win: unsafe-perm in lifecycle true
+9 verbose lifecycle DemoApp@0.1.0~package:win: PATH: C:\nvm\v5.3.0\node_modules\npm\bin\node-gyp-bin;D:\zy\electron_raw\node_modules\.bin;d:\Ruby23-x64\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;d:\Program Files\Git\cmd;C:\Users\Administrator\AppData\Local\Programs\Python\Python35;d:\Program Files\OpenVPN\bin;C:\nvm;C:\Program Files\nodejs;D:\sonar-scanner-3.0.3.778-windows\bin;C:\Program Files\Microsoft SQL Server\120\Tools\Binn\;C:\Program Files\Microsoft SQL Server\130\Tools\Binn\;C:\Program Files (x86)\Windows Kits\8.1\Windows Performance Toolkit\;d:\Ruby23-x64\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;d:\Program Files\Git\cmd;C:\Users\Administrator\AppData\Local\Programs\Python\Python35;d:\Program Files\OpenVPN\bin;C:\nvm;C:\Program Files\nodejs;d:\Program Files (x86)\Microsoft VS Code\bin
+10 verbose lifecycle DemoApp@0.1.0~package:win: CWD: D:\zy\electron_raw
+11 silly lifecycle DemoApp@0.1.0~package:win: Args: [ '/d /s /c',
+11 silly lifecycle   'gulp build -p win32 && gulp copyPlatforms -p win32' ]
+12 silly lifecycle DemoApp@0.1.0~package:win: Returned: code: 1  signal: null
+13 info lifecycle DemoApp@0.1.0~package:win: Failed to exec package:win script
+14 verbose stack Error: DemoApp@0.1.0 package:win: `gulp build -p win32 && gulp copyPlatforms -p win32`
+14 verbose stack Exit status 1
+14 verbose stack     at EventEmitter.<anonymous> (C:\nvm\v5.3.0\node_modules\npm\lib\utils\lifecycle.js:232:16)
+14 verbose stack     at emitTwo (events.js:87:13)
+14 verbose stack     at EventEmitter.emit (events.js:172:7)
+14 verbose stack     at ChildProcess.<anonymous> (C:\nvm\v5.3.0\node_modules\npm\lib\utils\spawn.js:24:14)
+14 verbose stack     at emitTwo (events.js:87:13)
+14 verbose stack     at ChildProcess.emit (events.js:172:7)
+14 verbose stack     at maybeClose (internal/child_process.js:818:16)
+14 verbose stack     at Process.ChildProcess._handle.onexit (internal/child_process.js:211:5)
+15 verbose pkgid DemoApp@0.1.0
+16 verbose cwd D:\zy\electron_raw
+17 error Windows_NT 6.1.7601
+18 error argv "C:\\Program Files\\nodejs\\node.exe" "C:\\Program Files\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "run" "package:win"
+19 error node v5.3.0
+20 error npm  v3.3.12
+21 error code ELIFECYCLE
+22 error DemoApp@0.1.0 package:win: `gulp build -p win32 && gulp copyPlatforms -p win32`
+22 error Exit status 1
+23 error Failed at the DemoApp@0.1.0 package:win script 'gulp build -p win32 && gulp copyPlatforms -p win32'.
+23 error Make sure you have the latest version of node.js and npm installed.
+23 error If you do, this is most likely a problem with the DemoApp package,
+23 error not with npm itself.
+23 error Tell the author that this fails on your system:
+23 error     gulp build -p win32 && gulp copyPlatforms -p win32
+23 error You can get their info via:
+23 error     npm owner ls DemoApp
+23 error There is likely additional logging output above.
+24 verbose exit [ 1, true ]

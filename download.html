@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>download in electron</title>
+</head>
+<body>
+<script>
+function showInfo(str){
+    var t = document.getElementById("show");
+        t.innerHTML += "\n" + str;
+}   
+</script>
+<h1>download in electron</h1>
+<p>文档：<a href="http://requirejs.org/docs/node.html"> http://requirejs.org/docs/node.html</a></p>
+
+<pre id="show"></pre>
+<script>
+Electron.ipcRenderer.on('chDownloadProgress', (event, params) => {
+     // params : {
+    //     url : _url, 
+    //     state : state, 
+    //     progress : 100, 
+    //     localPath : item.getSavePath()
+    // }
+    switch (params.state) {
+        //下载中
+        case 'progressing':
+            // 下载 另存为对话框,点取消后也会触发此方法  加入判断避免闪烁
+            if(params.progress === 0){
+                return;
+            }
+            console.log(params.state, params.progress);
+            break;
+        // 暂停
+        case 'paused':
+            break;
+        // 完成
+        case 'completed':
+            console.log(params.state, params);
+            break;
+        // 取消下载
+        case 'cancelled':
+            console.log('download has been cancelled');
+            break;
+        // case 'interrupted':
+        default:
+            console.log('异常情况');
+    }
+});
+
+function cancelDownload(){
+    Electron.cancelDownload('https://vscode.cdn.azure.cn/stable/2648980a697a4c8fb5777dcfb2ab110cec8a2f58/VSCodeSetup-ia32-1.14.1.exe');
+}
+
+</script>
+<a target="_blank" href='https://vscode.cdn.azure.cn/stable/2648980a697a4c8fb5777dcfb2ab110cec8a2f58/VSCodeSetup-ia32-1.14.1.exe' download>下载vscode</a>
+</br>
+<input type="button" value="取消下载" onclick="cancelDownload()">
+</html>

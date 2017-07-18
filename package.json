@@ -1,0 +1,27 @@
+{
+  "name": "DemoApp",
+  "version": "0.1.0",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "package:mac": "gulp build -p mac && gulp copyPlatforms -p mac",
+    "installer:mac": "node script/installer_mac.js",
+    "package:win": "gulp build -p win32 && gulp copyPlatforms -p win32",
+    "clean": "rm -rf ./dist"
+  },
+  "devDependencies": {
+    "electron": "=1.4.15",
+    "electron-builder": "^2.6.0",
+    "electron-packager": "^8.3.0",
+    "fs-extra": "^0.26.5",
+    "gulp": "*",
+    "gulp-clean": "^0.3.2",
+    "gulp-sequence": "^0.4.6",
+    "path": "^0.12.7",
+    "rimraf": "^2.5.4"
+  },
+  "dependencies": {
+    "gulp": "^3.9.1",
+    "jsonfile": "^2.2.3"
+  }
+}
