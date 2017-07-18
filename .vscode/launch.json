@@ -10,7 +10,7 @@
             "name": "启动程序",
             "program": "${workspaceRoot}/main.js",
             "cwd": "${workspaceRoot}",
-            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron.cmd",
+            "runtimeExecutable": "${workspaceRoot}/node_modules/.bin/electron",
             "program": "${workspaceRoot}/main.js"
         },
         {
