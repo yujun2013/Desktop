@@ -12,14 +12,13 @@ function showInfo(str){
 }	
 </script>
 <h1>screenshot in electron</h1>
-<p>文档：<a href="">待补充</a></p>
 
 <pre id="show"></pre>
 
 <script>
 function startShot(){
     console.log("start screenShot");
-    Electron.screenShot(function(data){
+    RongDesktop.screenShot(function(data){
         var t = document.getElementById("screen");
         t.src = data;
     });  

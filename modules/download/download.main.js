@@ -47,7 +47,7 @@ function download(mainWindow){
                 progress : item.getReceivedBytes() / item.getTotalBytes() * 100, 
                 localPath : item.getSavePath()
             }
-            mainWindow.webContents.send('chDownloadProgress', params)
+            mainWindow.webContents.send('download', params)
             if (state === 'interrupted') {
                 console.log('Download is interrupted but can be resumed')
             } else if (state === 'progressing') {
@@ -69,7 +69,7 @@ function download(mainWindow){
                     progress : 100, 
                     localPath : item.getSavePath()
                 }
-                mainWindow.webContents.send('chDownloadProgress', params)
+                mainWindow.webContents.send('download', params)
 
                 // sendToWebContents('chDownloadState', _url, state, item.getSavePath());
             }

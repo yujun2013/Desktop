@@ -9,7 +9,7 @@ var im_config = {
   //############  以上为必改项  ##############
 
   //############  以下为选改项  ##############
-  APP_ID: "im.rongcloud.DemoApp",
+  APP_ID: "im.rongcloud.AppName",
   //your homepage for menu link
   HOME: 'http://www.rongcloud.cn',
   //这个参数的理解可以参考  http://electron.atom.io/docs/api/app/  setAsDefaultProtocolClient
@@ -36,10 +36,10 @@ var im_config = {
   },
   PACKAGE: {
       //以下参数设置需对照 配置说明 中 4 项列出的工具参数理解
-      PRODUCTNAME: "DemoApp",
-      APPNAME: "DemoApp",
+      PRODUCTNAME: "AppName",
+      APPNAME: "AppName",
       VERSION: "1.0.0",
-      DESCRIPTION: "DemoApp Desktop Application.",
+      DESCRIPTION: "AppName Desktop Application.",
       AUTHOR: "RongCloud",
       RUNTIMEVERSION: "1.4.15",
       COPYRIGHT: "",

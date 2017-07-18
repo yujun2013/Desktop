@@ -30,12 +30,10 @@ function createWindow () {
     'webPreferences': {
           // nodeIntegration: false,
           preload: path.join(__dirname, 'modules', 'preload.js')
-          // preload: path.join(__dirname, 'modules','screenshot', 'screenshot.render.js')
       }
   })
 
   // and load the index.html of the app.
-  // win.loadURL(`file://${__dirname}/requirejs-in-node.html`)
   win.loadURL(`file://${__dirname}/download.html`)
 
   // Open the DevTools.

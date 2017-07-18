@@ -8,6 +8,16 @@ const {ipcRenderer} = require('electron')
 function cancelDownload(url) {
     ipcRenderer.send('cancel-download', url);
 }
+
+function download(callback) {
+    window.RongDesktop.downloadCallback = callback;
+}
 module.exports = {
+    download: download,
     cancelDownload: cancelDownload
 }
+
+RongDesktop.ipcRenderer.on('download', (event, params) => {
+    console.log('download callback');
+    window.RongDesktop.downloadCallback(params);
+});
