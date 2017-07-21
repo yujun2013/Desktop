@@ -36,8 +36,8 @@ gulp.task('cleanup:build', function() {
 });
 
 gulp.task('package', function(done) {
-  var devDependencies = packageJSON.devDependencies;
-  var devDependenciesKeys = Object.keys(devDependencies);
+  //var devDependencies = packageJSON.devDependencies;
+  //var devDependenciesKeys = Object.keys(devDependencies);
   var ignoreFiles = [
     // 'build',
     'dist',
@@ -53,15 +53,18 @@ gulp.task('package', function(done) {
     'screencapture.node_debug',
     'screencapture.node_pkg',
     '.vscode',
-    '.gitignore'
-    // 'Qt5Core.dll',
-    // 'Qt5Gui.dll',
-    // 'Qt5Widgets.dll'
+    '.gitignore',
+    //'*.o',
+    //'*.obj',
+    'node_modules/.bin',
+    '.gitignore',
+    'platforms',
+    'lib'
   ];
 
-  devDependenciesKeys.forEach(function(key) {
-    ignoreFiles.push('node_modules/' + key);
-  });
+  //devDependenciesKeys.forEach(function(key) {
+    //ignoreFiles.push('node_modules/' + key);
+  //});
   var osInfo = getOSInfo();
   var arch = osInfo.arch;
   var platform = osInfo.platform;
@@ -73,13 +76,18 @@ gulp.task('package', function(done) {
   productName += '-' + platform + '-' + arch;
   if (platform === 'darwin') {
     iconPath = path.join(iconFolderPath, config.PACKAGE.MAC.APPICON);
+    ignoreFiles.push('modules/screenshot/win/*');
     ignoreFiles.push('js/child.js');
+    ignoreFiles.push('modules/screenshot/mac/screencaptureDebug.node');
   }
   else {
     iconPath = path.join(iconFolderPath, config.PACKAGE.WIN.APPICON);
     ignoreFiles.push('lib');
+    ignoreFiles.push('modules/screenshot/mac/*');
+    ignoreFiles.push('modules/screenshot/win/Qt5Core.dll');
+    ignoreFiles.push('modules/screenshot/win/Qt5Gui.dll');
+    ignoreFiles.push('modules/screenshot/win/Qt5Widgets.dll');
   }
-
   var ignorePath = ignoreFiles.join('|');
   var ignoreRegexp = new RegExp(ignorePath, 'ig');
   // var unpackRegexp = new RegExp(['screenshot.framework','RongIMLib.node'], 'ig');
@@ -91,8 +99,10 @@ gulp.task('package', function(done) {
     'name': config.PACKAGE.APPNAME,
     'platform': platform,
     'asar': false,
-    // 'asar-unpack': 'RongIMLib.node',
-    // 'asar-unpack-dir': 'node_modules/screenshot.framework',
+    //'asar' : {
+      //'unpack': 'modules/screenshot/*',
+      //'unpackDir': 'modules/screenshot/'
+    //},
     'arch': arch,
     'electronVersion': config.PACKAGE.RUNTIMEVERSION,
     'out': './build',
@@ -108,6 +118,7 @@ gulp.task('package', function(done) {
     'osxSign': {
        'identity': 'Developer ID Application: Beijing Rong Cloud Network Technology CO., LTD (CQJSB93Y3D)'
     },
+    //'extendInfo': './assets/info.plist'
     // 'all': true,
     
     'protocols': [{
@@ -121,6 +132,9 @@ gulp.task('package', function(done) {
       'ProductName': config.PACKAGE.PRODUCTNAME,
       'InternalName': config.PACKAGE.PRODUCTNAME
     }
+    //'required': {
+      //'darwin': darwinResources
+    //}
   }, function(error, appPaths) {
     if (error) {
       console.log(error);
@@ -265,13 +279,15 @@ gulp.task('copyPlatforms', function (cb) {
   var osInfo = getOSInfo();
   var arch = osInfo.arch;
   var platform = osInfo.platform;
+  var currentPlatform;
   var targetPlatform = path.join(__dirname, 'build', config.PACKAGE.PRODUCTNAME + '-' + platform + '-' + arch);
   if(platform == 'darwin'){
+      currentPlatform = path.join(__dirname, 'modules', 'screenshot', 'mac', 'platforms');
       targetPlatform = path.join(targetPlatform, config.PACKAGE.PRODUCTNAME + '.app', 'Contents', 'MacOS', 'platforms');
   } else if(platform == 'win32'){
-	  targetPlatform = path.join(targetPlatform, 'platforms');
+      currentPlatform = path.join(__dirname, 'modules', 'screenshot', 'win', 'platforms');
+	    targetPlatform = path.join(targetPlatform, 'platforms');
   }
-  var currentPlatform = path.join(__dirname, 'platforms');
   fs.copy(currentPlatform, targetPlatform, function(error) {
     if (error) {
       console.log(error);
@@ -281,3 +297,26 @@ gulp.task('copyPlatforms', function (cb) {
     }
   });
 })
+
+gulp.task('copyLib', function (cb) {
+  var osInfo = getOSInfo();
+  var arch = osInfo.arch;
+  var platform = osInfo.platform;
+  var currentPlatform;
+  var targetPlatform = path.join(__dirname, 'build', config.PACKAGE.PRODUCTNAME + '-' + platform + '-' + arch);
+  if(platform == 'darwin'){
+    currentPlatform = path.join(__dirname, 'modules', 'screenshot', 'mac', 'lib');
+    targetPlatform = path.join(targetPlatform, config.PACKAGE.PRODUCTNAME + '.app', 'Contents', 'Resources', 'lib');
+  } else if(platform == 'win32'){
+    currentPlatform = path.join(__dirname, 'modules', 'screenshot', 'win', 'lib');
+  }
+  fs.copy(currentPlatform, targetPlatform, function(error) {
+    if (error) {
+      console.log(error);
+    }
+    else {
+      console.log('copy lib finished');
+    }
+  });
+})
+

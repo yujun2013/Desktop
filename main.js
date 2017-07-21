@@ -1,6 +1,7 @@
 const {app, BrowserWindow, ipcMain, clipboard} = require('electron')
 const path = require('path')
 
+const Config = require('./config.js')
 const download = require('./modules/download/download.main.js')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
@@ -12,15 +13,19 @@ const platform = {
   Linux: /^linux/i.test(process.platform)
 }
 
-var nodeUrl;
-if(platform.OSX){
-    nodeUrl = app.getName() == 'Electron' ? './modules/screenshot/mac/screencaptureDebug' : './modules/screenshot/mac/screencapture'
-} else if(platform.Windows){
-    nodeUrl = './modules/screenshot/win/screencapture'
+function loadScreeshot(){
+  var nodeUrl;
+  if(platform.OSX){
+      var baseUrl = './modules/screenshot/mac/';
+      nodeUrl = Config.DEBUG ? baseUrl + 'screencaptureDebug' : baseUrl + 'screencapture'
+  } else if(platform.Windows){
+      nodeUrl = './modules/screenshot/win/lib/screencapture'
+  }
+  const screencapture = require(nodeUrl)
+  const appCapture = new screencapture.Main;
+  global.sharedObj = {appCapture: appCapture};
 }
-const screencapture = require(nodeUrl)
-const appCapture = new screencapture.Main;
-global.sharedObj = {appCapture: appCapture};
+
 
 function createWindow () {
   // Create the browser window.
@@ -53,6 +58,7 @@ function createWindow () {
 // Some APIs can only be used after this event occurs.
 app.on('ready', function(){
   //create window
+  loadScreeshot();
   createWindow();
   download.addDownload(win);
 })
