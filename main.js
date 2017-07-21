@@ -19,7 +19,7 @@ function loadScreeshot(){
       var baseUrl = './modules/screenshot/mac/';
       nodeUrl = Config.DEBUG ? baseUrl + 'screencaptureDebug' : baseUrl + 'screencapture'
   } else if(platform.Windows){
-      nodeUrl = './modules/screenshot/win/lib/screencapture'
+      nodeUrl = './modules/screenshot/win/screencapture'
   }
   const screencapture = require(nodeUrl)
   const appCapture = new screencapture.Main;
