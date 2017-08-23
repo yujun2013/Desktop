@@ -7,7 +7,8 @@ const app = remote.app
 
 var sharedObj = remote.getGlobal('sharedObj');
 var appCapture = null;
-appCapture = sharedObj ? sharedObj.appCapture : screencapture;
+// console.log('sharedObj', sharedObj, sharedObj.appCapture);
+appCapture = sharedObj ? sharedObj.appCapture : null;
 
 const takeScreenshot = (callback) => {
     try{

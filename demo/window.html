@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>window in electron</title>
+</head>
+<body>
+<script>
+function showInfo(str){
+    var t = document.getElementById("show");
+        t.innerHTML += "\n" + str;
+}   
+</script>
+<h1>file in electron</h1>
+
+<input type="button" value="返回" onclick="location.href='../index.html'">
+<ul id="show"></ul>
+<script>
+var show = document.getElementById("show");
+
+function shakeWindow(){
+    RongDesktop.shakeWindow();
+}
+</script>
+
+</br>
+<!--  -->
+<input type="button" value="shakeWindow" onclick="shakeWindow()">
+</html>

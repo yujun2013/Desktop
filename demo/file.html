@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>download in electron</title>
+</head>
+<body>
+<script>
+function showInfo(str){
+    var t = document.getElementById("show");
+        t.innerHTML += "\n" + str;
+}   
+</script>
+<h1>file in electron</h1>
+
+<input type="button" value="返回" onclick="location.href='../index.html'">
+<ul id="file"></ul>
+</br>
+<ul id="show"></ul>
+<script>
+var objPath;
+var file = document.getElementById("file");
+var show = document.getElementById("show");
+function getFilePaths(){
+    objPath = RongDesktop.getPathsFromClipboard();
+    console.log(objPath, objPath.fileList);
+    var result = '';
+    for(var i = 0; i < objPath.dirList.length;i++){
+        result += '<li>' + objPath.dirList[i] + '</li>';
+    }
+    for(var i = 0; i < objPath.fileList.length;i++){
+        result += '<li>' + objPath.fileList[i] + '</li>';
+    }
+    file.innerHTML = result;
+}
+
+function getFilesByPaths(){
+    getFilePaths();
+    var files = RongDesktop.getBlobsByPaths(objPath.fileList);
+    var result = '';
+    for(var i = 0; i < files.length;i++){
+        result += '<li>' + files[i].name + '</li>';
+    }
+    show.innerHTML = result;
+}
+</script>
+
+</br>
+<!-- 获取剪贴板上文件路径 -->
+<input type="button" value="获取复制文件路径" onclick="getFilePaths()">
+<!-- 根据路径获取文件 -->
+<input type="button" value="获取文件对象" onclick="getFilesByPaths()">
+</html>

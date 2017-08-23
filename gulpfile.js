@@ -39,7 +39,6 @@ gulp.task('package', function(done) {
   //var devDependencies = packageJSON.devDependencies;
   //var devDependenciesKeys = Object.keys(devDependencies);
   var ignoreFiles = [
-    // 'build',
     'dist',
     'script',
     'notice.txt',
@@ -54,17 +53,13 @@ gulp.task('package', function(done) {
     'screencapture.node_pkg',
     '.vscode',
     '.gitignore',
-    //'*.o',
-    //'*.obj',
-    'node_modules/.bin',
+    // 'node_modules/.bin',
     '.gitignore',
     'platforms',
-    'lib'
+    'ronglib'
   ];
 
-  //devDependenciesKeys.forEach(function(key) {
-    //ignoreFiles.push('node_modules/' + key);
-  //});
+  var supportPlatforms = ['darwin', 'win32', 'linux'];
   var osInfo = getOSInfo();
   var arch = osInfo.arch;
   var platform = osInfo.platform;
@@ -76,20 +71,17 @@ gulp.task('package', function(done) {
   productName += '-' + platform + '-' + arch;
   if (platform === 'darwin') {
     iconPath = path.join(iconFolderPath, config.PACKAGE.MAC.APPICON);
-    ignoreFiles.push('modules/screenshot/win/*');
-    ignoreFiles.push('js/child.js');
-    ignoreFiles.push('modules/screenshot/mac/screencaptureDebug.node');
   }
   else {
     iconPath = path.join(iconFolderPath, config.PACKAGE.WIN.APPICON);
-    ignoreFiles.push('lib');
-    ignoreFiles.push('modules/screenshot/mac/*');
-    ignoreFiles.push('modules/screenshot/win/Qt5Core.dll');
-    ignoreFiles.push('modules/screenshot/win/Qt5Gui.dll');
-    ignoreFiles.push('modules/screenshot/win/Qt5Widgets.dll');
   }
+  supportPlatforms.forEach(function(_platform) {
+    if(_platform !== platform){
+      ignoreFiles.push('modules/screenshot' + _platform);
+    }
+  });
   var ignorePath = ignoreFiles.join('|');
-  var ignoreRegexp = new RegExp(ignorePath, 'ig');
+  var ignoreRegexp = new RegExp(ignorePath);
   // var unpackRegexp = new RegExp(['screenshot.framework','RongIMLib.node'], 'ig');
   // var unpackRegexp = new RegExp(['*.node'], 'ig');
 
@@ -113,6 +105,7 @@ gulp.task('package', function(done) {
     //'helper-bundle-id': config.MAC.HELPER_BUNDLE_ID, // OS X only
     'ignore': ignoreRegexp,
     'overwrite': true,
+    'packageManager': 'npm',
     'prune': true,
     'appCopyright': config.PACKAGE.COPYRIGHT,
     'osxSign': {
@@ -282,10 +275,10 @@ gulp.task('copyPlatforms', function (cb) {
   var currentPlatform;
   var targetPlatform = path.join(__dirname, 'build', config.PACKAGE.PRODUCTNAME + '-' + platform + '-' + arch);
   if(platform == 'darwin'){
-      currentPlatform = path.join(__dirname, 'modules', 'screenshot', 'mac', 'platforms');
+      currentPlatform = path.join(__dirname, 'modules', 'screenshot', 'darwin', 'platforms');
       targetPlatform = path.join(targetPlatform, config.PACKAGE.PRODUCTNAME + '.app', 'Contents', 'MacOS', 'platforms');
   } else if(platform == 'win32'){
-      currentPlatform = path.join(__dirname, 'modules', 'screenshot', 'win', 'platforms');
+      currentPlatform = path.join(__dirname, 'modules', 'screenshot', 'win32', 'platforms');
 	    targetPlatform = path.join(targetPlatform, 'platforms');
   }
   fs.copy(currentPlatform, targetPlatform, function(error) {
@@ -305,18 +298,53 @@ gulp.task('copyLib', function (cb) {
   var currentPlatform;
   var targetPlatform = path.join(__dirname, 'build', config.PACKAGE.PRODUCTNAME + '-' + platform + '-' + arch);
   if(platform == 'darwin'){
-    currentPlatform = path.join(__dirname, 'modules', 'screenshot', 'mac', 'lib');
-    targetPlatform = path.join(targetPlatform, config.PACKAGE.PRODUCTNAME + '.app', 'Contents', 'Resources', 'lib');
+    currentPlatform = path.join(__dirname, 'modules', 'screenshot', 'darwin', 'ronglib');
+    targetPlatform = path.join(targetPlatform, config.PACKAGE.PRODUCTNAME + '.app', 'Contents', 'Resources', 'ronglib');
   } else if(platform == 'win32'){
-    currentPlatform = path.join(__dirname, 'modules', 'screenshot', 'win', 'lib');
+    currentPlatform = path.join(__dirname, 'modules', 'screenshot', 'win32', 'ronglib');
   }
   fs.copy(currentPlatform, targetPlatform, function(error) {
     if (error) {
       console.log(error);
     }
     else {
-      console.log('copy lib finished');
+      console.log('copy ronglib finished');
     }
   });
 })
+
+gulp.task('modifylibPath', function(callback) {
+  var osInfo = getOSInfo();
+  var arch = osInfo.arch;
+  var platform = osInfo.platform;
+  var basePath = '';
+  if(platform == 'darwin'){
+      basePath = path.join(__dirname, 'build', config.PACKAGE.PRODUCTNAME + '-' + platform + '-' + arch,
+        config.PACKAGE.PRODUCTNAME + '.app', 'Contents', 'Resources', 'app', 'modules', 'screenshot', platform, 'screencapture.node');
+  } 
+  childProcess.spawnSync('install_name_tool', ['-change', './modules/screenshot/darwin/lib/QtCore', '@executable_path/../Resources/app/modules/screenshot/darwin/lib/QtCore', basePath])
+  childProcess.spawnSync('install_name_tool', ['-change', './modules/screenshot/darwin/lib/QtGui', '@executable_path/../Resources/app/modules/screenshot/darwin/lib/QtGui', basePath])
+  childProcess.spawnSync('install_name_tool', ['-change', './modules/screenshot/darwin/lib/QtWidgets', '@executable_path/../Resources/app/modules/screenshot/darwin/lib/QtWidgets', basePath])
+  childProcess.spawnSync('install_name_tool', ['-change', './modules/screenshot/darwin/lib/QtDBus', '@executable_path/../Resources/app/modules/screenshot/darwin/lib/QtDBus', basePath])
+  childProcess.spawnSync('install_name_tool', ['-change', './modules/screenshot/darwin/lib/QtPrintSupport', '@executable_path/../Resources/app/modules/screenshot/darwin/lib/QtPrintSupport', basePath])
+  childProcess.spawnSync('otool', ['-L', basePath])
+});
+
+
+gulp.task('modifylibPathDebug', function(callback) {
+  var osInfo = getOSInfo();
+  var arch = osInfo.arch;
+  var platform = osInfo.platform;
+  var basePath = '';
+  if(platform == 'darwin'){
+      basePath = path.join(__dirname, 'modules', 'screenshot', platform, 'screencapture.node');
+  } 
+  childProcess.spawnSync('install_name_tool', ['-change', './dynamiclibrary/darwin/lib/QtCore', './modules/screenshot/darwin/lib/QtCore', basePath])
+  childProcess.spawnSync('install_name_tool', ['-change', './dynamiclibrary/darwin/lib/QtGui', './modules/screenshot/darwin/lib/QtGui', basePath])
+  childProcess.spawnSync('install_name_tool', ['-change', './dynamiclibrary/darwin/lib/QtWidgets', './modules/screenshot/darwin/lib/QtWidgets', basePath])
+  childProcess.spawnSync('install_name_tool', ['-change', './dynamiclibrary/darwin/lib/QtDBus', './modules/screenshot/darwin/lib/QtDBus', basePath])
+  childProcess.spawnSync('install_name_tool', ['-change', './dynamiclibrary/darwin/lib/QtPrintSupport', './modules/screenshot/darwin/lib/QtPrintSupport', basePath])
+  childProcess.spawnSync('otool', ['-L', basePath])
+});
+
 

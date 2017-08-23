@@ -1,4 +1,4 @@
-const {app, BrowserWindow, ipcMain, clipboard} = require('electron')
+const {app, BrowserWindow, ipcMain, clipboard, globalShortcut} = require('electron')
 const path = require('path')
 
 const Config = require('./config.js')
@@ -6,6 +6,7 @@ const download = require('./modules/download/download.main.js')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
+let appCapture
 
 const platform = {
   Windows: /^win/i.test(process.platform),
@@ -16,16 +17,29 @@ const platform = {
 function loadScreeshot(){
   var nodeUrl;
   if(platform.OSX){
+      nodeUrl = './modules/screenshot/darwin/screencapture'
+  } else if(platform.Windows){
+      nodeUrl = './modules/screenshot/win32/screencapture'
+  }
+
+/*  if(platform.OSX){
       var baseUrl = './modules/screenshot/mac/';
       nodeUrl = Config.DEBUG ? baseUrl + 'screencaptureDebug' : baseUrl + 'screencapture'
   } else if(platform.Windows){
       nodeUrl = './modules/screenshot/win/screencapture'
-  }
+  }*/
+
   const screencapture = require(nodeUrl)
-  const appCapture = new screencapture.Main;
+  appCapture = new screencapture.Main;
   global.sharedObj = {appCapture: appCapture};
 }
 
+function reload() {
+    if (win && win.webContents) {
+        win.show()
+        win.webContents.reloadIgnoringCache()
+    }
+}
 
 function createWindow () {
   // Create the browser window.
@@ -61,6 +75,7 @@ app.on('ready', function(){
   loadScreeshot();
   createWindow();
   download.addDownload(win);
+  globalShortcut.register('CTRL+R', reload)
 })
 
 // Quit when all windows are closed.
@@ -80,5 +95,10 @@ app.on('activate', () => {
   }
 })
 
+app.on('window-all-closed', () => {
+  appCapture.deleteScreenCapture();
+})
+
+console.log('download path:', app.getPath('downloads'))
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

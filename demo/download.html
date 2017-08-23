@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>download in electron</title>
+</head>
+<body>
+<script>
+function showInfo(str){
+    var t = document.getElementById("show");
+        t.innerHTML += "\n" + str;
+}   
+</script>
+<h1>download in electron</h1>
+
+<input type="button" value="返回" onclick="location.href='../index.html'">
+<pre id="show"></pre>
+<script>
+
+var url = 'https://vscode.cdn.azure.cn/stable/2648980a697a4c8fb5777dcfb2ab110cec8a2f58/VSCodeSetup-ia32-1.14.1.exe';
+function cancelDownload(){
+    RongDesktop.cancelDownload(url);
+}
+var show = document.getElementById("show");
+var downloadCallback = function (params) {
+    switch (params.state) {
+        //下载中
+        case 'progressing':
+            // 下载 另存为对话框,点取消后也会触发此方法  加入判断避免闪烁
+            if(params.progress === 0){
+                return;
+            }
+            show.innerText = params.progress;
+            console.log(params.state, params.progress);
+            break;
+        // 暂停
+        case 'paused':
+            break;
+        // 完成
+        case 'completed':
+            console.log(params.state, params);
+            show.innerText = '下载完成';
+            break;
+        // 取消下载
+        case 'cancelled':
+            console.log('download has been cancelled');
+            show.innerText = '取消下载';
+            break;
+        // case 'interrupted':
+        default:
+            console.log('异常情况');
+    }
+}
+
+function download(){
+    window.location = url;  
+    RongDesktop.download(downloadCallback);
+}
+// document.write('<a target="_blank" href='+url+' download>下载vscode</a>');
+document.write('<input type="button" value="下载vscode" onclick="download()">');
+</script>
+
+</br>
+<input type="button" value="取消下载" onclick="cancelDownload()">
+</html>

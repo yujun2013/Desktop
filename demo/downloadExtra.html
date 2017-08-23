@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>download in electron</title>
+</head>
+<body>
+<script>
+function showInfo(str){
+    var t = document.getElementById("show");
+        t.innerHTML += "\n" + str;
+}   
+</script>
+<h1>download in electron</h1>
+
+<input type="button" value="返回" onclick="location.href='../index.html'">
+<pre id="show"></pre>
+
+<input type="button" value="下载vscode" onclick="download()">
+<input id="pause" type="button" value="暂停" onclick="toggleButton()">
+<input type="button" value="取消下载" onclick="cancelDownload()">
+
+<script>
+
+var url = 'https://vscode.cdn.azure.cn/stable/2648980a697a4c8fb5777dcfb2ab110cec8a2f58/VSCodeSetup-ia32-1.14.1.exe';
+var downloadExtra = RongDesktop.downloadExta;
+var show = document.getElementById("show");
+var pause = document.getElementById("pause");
+var messageId;
+var downloadCallback = function (params) {
+    switch (params.state) {
+        //下载前
+        case 'preDownload':
+            console.log('full size', params.totalBytes);
+            break;
+        // 下载中
+        case 'downloading':
+            if(params.progress === 0){
+                return;
+            }
+            show.innerText = params.receivedBytes + '/' + params.totalBytes;
+            break;
+        // 完成
+        case 'downloaded':
+            console.log(params.state, params);
+            if(params.receivedBytes >= params.totalBytes){
+                show.innerText = '下载完成';
+            } else {
+                show.innerText = '下载已取消';
+            }
+            break;
+        // case 'error':
+        default:
+            console.log('异常情况' + params.error);
+    }
+}
+
+function download(){
+    messageId = Math.floor(Math.random()*100)
+    downloadExtra.download(url , null, messageId, downloadCallback);
+}
+function cancelDownload(){
+    downloadExtra.cancel(messageId);
+}
+
+function toggleButton(){
+    if (pause.value == '暂停') {
+        downloadExtra.pause(messageId);
+        pause.value = '恢复';
+    }
+    else {
+        downloadExtra.resume(messageId);
+        pause.value = '暂停'
+    }
+}
+</script>
+
+</br>
+</html>
