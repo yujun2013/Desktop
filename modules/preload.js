@@ -11,7 +11,8 @@ window.RongDesktop = {
     getPathsFromClipboard: file.getPathsFromClipboard,
     getBlobsByPaths: file.getBlobsByPaths,
     shakeWindow: windowAction.shakeWindow,
-    downloadExta: downloadExtra
+    downloadExta: downloadExtra,
+    downloadCallback: []
 }
 
 window.Electron = {

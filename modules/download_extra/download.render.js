@@ -1,7 +1,7 @@
 /*
 https://electron.atom.io/docs/api/ipc-main/
 */
-const {ipcRenderer, remote} = require('electron')
+const {ipcRenderer, remote, dialog} = require('electron')
 const request = require('request')
 const fs = require('fs')
 const path = require('path')
@@ -10,13 +10,18 @@ let downloadListener = {}
 let app = remote.app
 //暴露方法给页面dom注册调用
 
+var showSaveDialog = (file_url , target_path, messageId, callback) => {
+    ipcRenderer.send('show-save-dialog', file_url , target_path, messageId)
+    window.RongDesktop.downloadCallback[messageId] = callback;
+}
+
+ipcRenderer.on('beginDownload', (event, file_url , target_path, messageId) => {
+    var callback = window.RongDesktop.downloadCallback[messageId];
+    downloadFile(file_url , target_path, messageId, callback)
+    delete window.RongDesktop.downloadCallback[messageId]
+})
+
 var downloadFile = (file_url , target_path, messageId, callback) => {
-    // Save variable to know progress
-    
-    var parsed = url.parse(file_url);
-    var filename = path.basename(parsed.pathname);
-    target_path = target_path || path.join(app.getPath('downloads'), filename)
-    // messageId = messageId || Math.floor(Math.random()*100)
     var received_bytes = 0;
     var total_bytes = 0;
     var req = request({
@@ -35,8 +40,6 @@ var downloadFile = (file_url , target_path, messageId, callback) => {
         targetPath: ''
     };
     req.on('response', function ( data ) {
-        // Change the total bytes value to get progress later.
-        // console.log('response', data.statusCode)
         params = {
             state: 'preDownload',
             messageId: messageId,
@@ -111,7 +114,7 @@ function cancel (id) {
 }
 
 module.exports = {
-    download: downloadFile,
+    download: showSaveDialog,
     pause: pause,
     resume: resume,
     cancel: cancel

@@ -26,11 +26,11 @@ function download(mainWindow){
     mainWindow.webContents.session.on('will-download', (event, item, webContents) => {
         let _url = item.getURL();
         let _parseUrl = url.parse(_url);
-        let isImage = (item.getMimeType().indexOf('image/') > -1 || _parseUrl.hostname === 'rongcloud-image.ronghub.com');
-        if(isImage){
-            handleImage(item);
-            return;
-        } 
+        // let isImage = (item.getMimeType().indexOf('image/') > -1 || _parseUrl.hostname === 'rongcloud-image.ronghub.com');
+        // if(isImage){
+        //     handleImage(item);
+        //     return;
+        // } 
         let totalBytes = item.getTotalBytes();
         let callbackState;
         let params = {};

@@ -3,6 +3,7 @@ const path = require('path')
 
 const Config = require('./config.js')
 const download = require('./modules/download/download.main.js')
+const downloadExtra = require('./modules/download_extra/download.main.js')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
@@ -75,6 +76,7 @@ app.on('ready', function(){
   loadScreeshot();
   createWindow();
   download.addDownload(win);
+  downloadExtra.init(win);
   globalShortcut.register('CTRL+R', reload)
 })
 
