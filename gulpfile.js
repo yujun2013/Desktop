@@ -327,6 +327,7 @@ gulp.task('modifylibPath', function(callback) {
   childProcess.spawnSync('install_name_tool', ['-change', './modules/screenshot/darwin/lib/QtWidgets', '@executable_path/../Resources/app/modules/screenshot/darwin/lib/QtWidgets', basePath])
   childProcess.spawnSync('install_name_tool', ['-change', './modules/screenshot/darwin/lib/QtDBus', '@executable_path/../Resources/app/modules/screenshot/darwin/lib/QtDBus', basePath])
   childProcess.spawnSync('install_name_tool', ['-change', './modules/screenshot/darwin/lib/QtPrintSupport', '@executable_path/../Resources/app/modules/screenshot/darwin/lib/QtPrintSupport', basePath])
+  childProcess.spawnSync('install_name_tool', ['-change', './modules/screenshot/darwin/lib/QtMacExtras', '@executable_path/../Resources/app/modules/screenshot/darwin/lib/QtMacExtras', basePath])
   childProcess.spawnSync('otool', ['-L', basePath])
 });
 
@@ -344,6 +345,7 @@ gulp.task('modifylibPathDebug', function(callback) {
   childProcess.spawnSync('install_name_tool', ['-change', './dynamiclibrary/darwin/lib/QtWidgets', './modules/screenshot/darwin/lib/QtWidgets', basePath])
   childProcess.spawnSync('install_name_tool', ['-change', './dynamiclibrary/darwin/lib/QtDBus', './modules/screenshot/darwin/lib/QtDBus', basePath])
   childProcess.spawnSync('install_name_tool', ['-change', './dynamiclibrary/darwin/lib/QtPrintSupport', './modules/screenshot/darwin/lib/QtPrintSupport', basePath])
+  childProcess.spawnSync('install_name_tool', ['-change', './dynamiclibrary/darwin/lib/QtMacExtras', './modules/screenshot/darwin/lib/QtMacExtras', basePath])
   childProcess.spawnSync('otool', ['-L', basePath])
 });
 

@@ -13,8 +13,10 @@ appCapture = sharedObj ? sharedObj.appCapture : null;
 const takeScreenshot = (callback) => {
     try{
         appCapture.screenCapture("", function(base64){
-            var clipboardData = clipboard.readImage();
-            callback(clipboardData.toDataURL());
+            if(base64 === 'image'){
+                var clipboardData = clipboard.readImage();
+                callback(clipboardData.toDataURL());
+            }
         });
     } 
     catch(ex){
