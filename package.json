@@ -6,7 +6,7 @@
     "start": "electron .",
     "package:mac": "gulp build -p mac && gulp copyPlatforms -p mac && gulp modifylibPath",
     "installer:mac": "node script/installer_mac.js",
-    "package:win": "gulp build -p win32 && gulp copyPlatforms -p win32 && gulp copyLib -p win32",
+    "package:win": "gulp build -p win32 && gulp copyPlatforms -p win32",
     "clean": "rm -rf ./dist"
   },
   "devDependencies": {
