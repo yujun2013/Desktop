@@ -22,14 +22,6 @@ function loadScreeshot(){
   } else if(platform.Windows){
       nodeUrl = './modules/screenshot/win32/screencapture'
   }
-
-/*  if(platform.OSX){
-      var baseUrl = './modules/screenshot/mac/';
-      nodeUrl = Config.DEBUG ? baseUrl + 'screencaptureDebug' : baseUrl + 'screencapture'
-  } else if(platform.Windows){
-      nodeUrl = './modules/screenshot/win/screencapture'
-  }*/
-
   const screencapture = require(nodeUrl)
   appCapture = new screencapture.Main;
   global.sharedObj = {appCapture: appCapture};
