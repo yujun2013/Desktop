@@ -7,7 +7,7 @@ const downloadExtra = require('./modules/download_extra/download.main.js')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let win
-let appCapture
+let appCapture = null
 
 const platform = {
   Windows: /^win/i.test(process.platform),
@@ -22,8 +22,13 @@ function loadScreeshot(){
   } else if(platform.Windows){
       nodeUrl = './modules/screenshot/win32/screencapture'
   }
-  const screencapture = require(nodeUrl)
-  appCapture = new screencapture.Main;
+  try {
+    const screencapture = require(nodeUrl)
+    appCapture = new screencapture.Main;
+  } catch(e) {
+    // statements
+    console.log(e, 'screencapture load failed');
+  }
   global.sharedObj = {appCapture: appCapture};
 }
 

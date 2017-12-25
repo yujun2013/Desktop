@@ -16,12 +16,14 @@ function showInfo(str){
 <pre id="show"></pre>
 
 <script>
+var cancelCallback = function(){
+    alert('you canceled screeshot');
+}
 function startShot(){
-    console.log("start screenShot");
     RongDesktop.screenShot(function(data){
         var t = document.getElementById("screen");
         t.src = data;
-    });  
+    }, cancelCallback);  
 } 
 
 </script>
